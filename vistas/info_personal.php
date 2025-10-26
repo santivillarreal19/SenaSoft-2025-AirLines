@@ -1,6 +1,6 @@
 <?php
 $idvuelo = $_POST['id_vuelo']??'';
-$numasiento = $_POST['num_asiento']??'';
+$numasiento = $_POST['id_asiento']??'';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -78,7 +78,7 @@ $numasiento = $_POST['num_asiento']??'';
 <div class="min-h-screen bg-gray-100 p-0 sm:p-12">
   <div class="mx-auto max-w-md px-6 py-12 bg-white border-0 shadow-lg sm:rounded-3xl">
     <h1 class="text-2xl font-bold mb-8">Datos de personal</h1>
-    <form id="form" action="../senEmail.php" method="post">
+    <form id="form" action="../sendEmail.php" method="post">
       <input type="hidden" name="id_vuelo" value="<?= $idvuelo ?>" required>
       <input type="hidden" name="num_asiento" value="<?= $numasiento ?>" required>
       <div class="relative z-0 w-full mb-5">
@@ -150,10 +150,15 @@ $numasiento = $_POST['num_asiento']??'';
           class="pt-3 pb-2 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none z-1 focus:outline-none focus:ring-0 focus:border-black border-gray-200"
         >
           <option value="" selected disabled hidden></option>
-          <option value="1">Cedula de Ciudadanía</option>
-          <option value="2">Tarjeta de Identidad</option>
-          <option value="3">Pasaporte</option>
-          <option value="4">Registro Civil</option>
+          <?php
+          require_once('../backend_php/conn/conn.php');
+          $sql = "SELECT * FROM tipos_documentos";
+          $stmt = mysqli_query($conn,$sql);
+
+          while ($row = mysqli_fetch_assoc($stmt)) {
+            echo"<option value=".$row['id_documento'].">".$row['documentos']."</option>";
+          }
+          ?>
         </select>
         <label for="select" class="absolute duration-300 top-3 -z-1 origin-0 text-gray-500">Tipo documento:</label>
         <span class="text-sm text-red-600 hidden" id="error">Debes seleccionar una opción</span>
@@ -192,17 +197,19 @@ $numasiento = $_POST['num_asiento']??'';
           onclick="this.setAttribute('value', this.value);"
           class="pt-3 pb-2 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none z-1 focus:outline-none focus:ring-0 focus:border-black border-gray-200"
         >
-          <option value="" selected disabled hidden></option>
-          <option value="MEN">Masculino</option>
-          <option value="WOMEN">Femenino</option>
-          <option value="OTHER">Otro</option>
+          <?php
+          require_once('../backend_php/conn/conn.php');
+          $sql = "SELECT * FROM generos";
+          $stmt = mysqli_query($conn,$sql);
+
+          while ($row = mysqli_fetch_assoc($stmt)) {
+            echo"<option value=".$row['id_genero'].">".$row['generos']."</option>";
+          }
+          ?>
         </select>
         <label for="select" class="absolute duration-300 top-3 -z-1 origin-0 text-gray-500">Género:</label>
         <span class="text-sm text-red-600 hidden" id="error">Debes seleccionar una opción</span>
       </div>
-
-      <input type="hidden" name="reserva" required>
-      <input type="hidden" name="asiento" required>
 
       <button
         id="button"
